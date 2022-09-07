@@ -11,5 +11,5 @@ RUN apt-get update \
   && make install
 
 FROM ubuntu:22.04
-COPY --from=builder /opt/hello /opt/hello
+COPY --from=builder /opt/hello /opt/helloworld
 
