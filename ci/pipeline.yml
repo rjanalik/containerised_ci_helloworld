@@ -20,7 +20,6 @@ test_job:
     - /opt/helloworld/bin/hello
   variables:
     PULL_IMAGE: 'YES'
-    CSCS_REGISTRY_LOGIN: 'YES'
     SLURM_JOB_NUM_NODES: 2
     SLURM_PARTITION: normal
     SLURM_NTASKS: 2
