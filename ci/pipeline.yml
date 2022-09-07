@@ -1,3 +1,6 @@
+include:
+  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
+
 stages:
   - build
   - test
@@ -7,19 +10,18 @@ variables:
 
 build_job:
   stage: build
-  tags: [docker_jfrog]
+  extends: .container-builder
   script: ['true']
   variables:
     DOCKERFILE: ci/docker/Dockerfile.build
 
 test_job:
   stage: test
-  tags: [daint-container]
+  extends: .container-runner-daint
   image: $PERSIST_IMAGE_NAME
   script:
     - /opt/helloworld/bin/hello
   variables:
-    PULL_IMAGE: 'YES'
     SLURM_JOB_NUM_NODES: 2
     SLURM_PARTITION: normal
     SLURM_NTASKS: 2
