@@ -1,0 +1,25 @@
+stages:
+  - build
+  - test
+
+variables:
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_REF_NAME
+
+build_job:
+  stage: build
+  tags: [docker_jfrog]
+  variables:
+    DOCKERFILE: ci/docker/Dockerfile.build
+
+test_job:
+  stage: test
+  tags: [daint-container]
+  image: $PERSIST_IMAGE_NAME
+  script:
+    - /opt/helloworld/bin/hello
+  variables:
+    PULL_IMAGE: 'YES'
+    CSCS_REGISTRY_LOGIN: 'YES'
+    SLURM_JOB_NUM_NODES: 2
+    SLURM_PARTITION: normal
+    SLURM_NTASKS: 2
