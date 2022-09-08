@@ -11,7 +11,6 @@ variables:
 build_job:
   stage: build
   extends: .container-builder
-  script: ['true']
   variables:
     DOCKERFILE: ci/docker/Dockerfile.build
 
