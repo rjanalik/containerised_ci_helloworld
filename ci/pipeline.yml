@@ -6,7 +6,7 @@ stages:
   - test
 
 variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_REF_NAME
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_SHORT_SHA
 
 build_job:
   stage: build
@@ -16,7 +16,7 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-daint
+  extends: .container-runner-daint-gpu
   image: $PERSIST_IMAGE_NAME
   script:
     - /opt/helloworld/bin/hello
