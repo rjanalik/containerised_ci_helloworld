@@ -22,5 +22,5 @@ test_job:
     - /opt/helloworld/bin/hello
   variables:
     SLURM_JOB_NUM_NODES: 2
-    SLURM_PARTITION: normal
+    SLURM_PARTITION: debug
     SLURM_NTASKS: 2
