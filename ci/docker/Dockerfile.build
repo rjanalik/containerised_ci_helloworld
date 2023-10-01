@@ -1,4 +1,4 @@
-ARG BASEIMG=docker.io/ubuntu:22.04
+ARG BASEIMG=docker.io/nvidia/cuda:11.7.1-devel-ubuntu22.04
 FROM $BASEIMG
 
 MAINTAINER Andreas Fink <andreas.fink@cscs.ch>
@@ -64,7 +64,7 @@ COPY bin/* /usr/local/bin
 COPY spack_env.yaml /opt/spack_env.yaml.template
 
 # Re-export CUDA_VERSION, because nvidia/sarus think that this is a precious variable that needs protection and must be erased
-ENV ALSO_CUDA_VERSION=$CUDA_VERSION
+ENV ALSO_CUDA_VERSION=11.7.1
 
 COPY . /helloworld/src
 
