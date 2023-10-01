@@ -4,7 +4,7 @@ FROM $BASEIMG
 MAINTAINER Andreas Fink <andreas.fink@cscs.ch>
 
 ARG SPACK_REPO=https://github.com/spack/spack
-ARG SPACK_VER=v0.19.2
+ARG SPACK_VER=v0.20.1
 ENV SPACK_ROOT=/opt/spack
 
 RUN apt-get update \
