@@ -13,7 +13,7 @@ RUN spack-install-helper daint-mc \
 # end of builder container, now we are ready to copy necessary files
 
 # copy only relevant parts to the final container
-FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/base-cpu:1c9d0feb as builder
+FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/base-cpu:1c9d0feb
 
 # it is important to keep the paths, otherwise your installation is broken
 # all these paths are created with the above `spack-install-helper` invocation
