@@ -4,10 +4,7 @@ ARG NUM_PROCS
 
 RUN spack-install-helper daint-mc \
     "git" \
-    "cmake" \
-    "valgrind" \
-    "python" \
-    "hwloc" \
+    "vim" \
     "htop"
 
 # end of builder container, now we are ready to copy necessary files
