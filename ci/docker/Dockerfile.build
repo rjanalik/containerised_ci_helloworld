@@ -1,4 +1,4 @@
-FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/spack0.20.1-cpu:4bb26049 as builder
+FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/spack0.20.1-cuda:82e2f44c as builder
 
 ARG NUM_PROCS
 
