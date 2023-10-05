@@ -8,9 +8,11 @@ import sys
 #+$(SPACK) -e '/opt/spack-environment' install $(SPACK_INSTALL_FLAGS) --only-concrete --only=package --no-add /$(notdir $@) && touch $@
 # Spack 0.19
 #+$(SPACK) -e '/opt/spack-environment' install $(SPACK_BUILDCACHE_FLAG) $(SPACK_INSTALL_FLAGS) --only-concrete --only=package --no-add /$(notdir $@) # $(SPEC)
+# Spack 0.20
+#+$(SPACK) -e '/opt/spack-environment' install $(SPACK_BUILDCACHE_FLAG) $(SPACK_INSTALL_FLAGS) --only-concrete --only=package /$(HASH) # $(SPEC)
 
 found_install = False
-install_regex = re.compile(r'\t\+\$\(SPACK\) -e .*--only-concrete --only=package --no-add /\$\(notdir \$@\) (.*)')
+install_regex = re.compile(r'\t\+\$\(SPACK\) -e .*--only-concrete --only=package /\$\(HASH\) (.*)')
 for line in fileinput.input():
     match = install_regex.match(line)
     if match:
