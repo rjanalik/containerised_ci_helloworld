@@ -14,6 +14,7 @@ install_regex = re.compile(r'\t\+\$\(SPACK\) -e .*--only-concrete --only=package
 for line in fileinput.input():
     match = install_regex.match(line)
     if match:
+        print("RJ match")
         found_install = True
         # remove the tab at start of line AND the part at the end of the line (comment for spack-0.19, touch $@ for spack-0.18)
         install_line = match[0].replace(match[1], '|| \\')[2:]
@@ -30,6 +31,7 @@ for line in fileinput.input():
         if match[1].find('touch $@') != -1:
             print('\t@touch $@')
     else:
+        print("RJ no match")
         sys.stdout.write(line)
 
 exit(0 if found_install else 1)
