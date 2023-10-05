@@ -6,7 +6,7 @@ stages:
   - test
 
 variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.1-cpu:$CI_COMMIT_SHORT_SHA
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.1-cuda:$CI_COMMIT_SHORT_SHA
 
 build_job:
   stage: build
