@@ -2,6 +2,8 @@ FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/spack0.19.2-cpu:7
 
 ARG NUM_PROCS
 
+COPY bin/* /usr/local/bin
+
 RUN spack-install-helper daint-mc \
     "git" \
     "cmake" \
