@@ -2,7 +2,7 @@ FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/spack0.20.1-cuda:
 
 ARG NUM_PROCS
 
-RUN spack-install-helper daint-mc \
+RUN spack-install-helper daint-gpu \
     "git" \
     "vim" \
     "htop"
