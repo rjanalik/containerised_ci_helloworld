@@ -1,12 +1,12 @@
 include:
-  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
+  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/feature/vcue-140-alps-templates/templates/v2/.ci-ext.yml'
 
 stages:
-  - build
+  #- build
   - test
 
 variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.1-cuda:$CI_COMMIT_SHORT_SHA
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.2-rocm5.6.1:$CI_COMMIT_SHORT_SHA
 
 build_job:
   stage: build
@@ -16,11 +16,11 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
+  extends: .container-runner-clariden-mi200
   image: $PERSIST_IMAGE_NAME
   script:
     - echo RJ nothing to do here
   variables:
-    SLURM_JOB_NUM_NODES: 2
-    SLURM_PARTITION: debug
-    SLURM_NTASKS: 2
+    SLURM_JOB_NUM_NODES: 1
+      #SLURM_PARTITION: debug
+    SLURM_NTASKS: 1
