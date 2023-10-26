@@ -19,7 +19,10 @@ test_job:
   extends: .container-runner-hohgant-mi200
   image: $PERSIST_IMAGE_NAME
   script:
-    - echo RJ nothing to do here
+    - rocm-smi
+    - ./stream
+    - make -B
+    - ./stream
   variables:
     SLURM_JOB_NUM_NODES: 1
       #SLURM_PARTITION: debug
