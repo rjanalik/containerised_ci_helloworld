@@ -2,7 +2,7 @@ HIP_PATH?= $(wildcard /opt/rocm)
 
 HIPCC=$(HIP_PATH)/bin/hipcc
 
-CXXFLAGS += -std=c++11 -O3
+CXXFLAGS += -std=c++11 -O3 --offload-arch=gfx90a:sramecc+:xnack-
 
 stream: stream.cpp
 ifeq ($(shell which $(HIPCC) > /dev/null; echo $$?), 0)
