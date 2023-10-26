@@ -21,6 +21,9 @@ test_job:
   script:
     - pwd
     - ls
+    - cat script*
+    - cd /
+    - ls
     - rocm-smi
     - ./stream
     - make -B
