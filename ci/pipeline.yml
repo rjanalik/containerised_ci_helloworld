@@ -16,7 +16,7 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-clariden-mi200
+  extends: .container-runner-hohgant-mi200
   image: $PERSIST_IMAGE_NAME
   script:
     - echo RJ nothing to do here
