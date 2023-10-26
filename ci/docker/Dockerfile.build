@@ -10,7 +10,7 @@ RUN spack-install-helper hohgant-amdgpu \
 # end of builder container, now we are ready to copy necessary files
 
 # copy only relevant parts to the final container
-FROM docker.io/rocm/dev-ubuntu-22.04:5.6.1-complete
+FROM docker.io/rjanalik/spack:base-rocm5.6.1-ubuntu22.04
 
 # it is important to keep the paths, otherwise your installation is broken
 # all these paths are created with the above `spack-install-helper` invocation
