@@ -26,8 +26,11 @@ test_job:
     - ls
     - rocm-smi
     - ./stream
+    - cp stream stream-bk
     - make -B
     - ./stream
+    - diff stream stream-bk
+    - echo $HIPCC_COMPILE_FLAGS_APPEND
   variables:
     SLURM_JOB_NUM_NODES: 1
       #SLURM_PARTITION: debug
