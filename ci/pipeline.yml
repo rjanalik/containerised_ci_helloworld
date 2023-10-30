@@ -20,7 +20,7 @@ test_job:
   image: $PERSIST_IMAGE_NAME
   script:
     - pwd
-    - ls
+    - ls -l
     - cat script*
     - cd /
     - ls
