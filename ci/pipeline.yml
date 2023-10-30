@@ -30,6 +30,7 @@ test_job:
     - ./stream
     - diff stream stream-bk
     - echo $HIPCC_COMPILE_FLAGS_APPEND
+    - echo "done"
   variables:
     SLURM_JOB_NUM_NODES: 1
       #SLURM_PARTITION: debug
