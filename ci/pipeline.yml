@@ -21,7 +21,7 @@ test_job:
   script:
     - pwd
     - ls -l
-    - cat script*
+    - #cat script*
     - cd /
     - ls
     - rocm-smi
