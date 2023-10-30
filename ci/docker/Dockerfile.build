@@ -31,7 +31,6 @@ RUN apt-get -yqq update && apt-get -yqq upgrade \
 
 # copy and build the test app
 COPY ./cuda-stream/* .
-ENV HIPCC_COMPILE_FLAGS_APPEND="--offload-arch=gfx90a"
 RUN make
 
 CMD ["./stream"]
