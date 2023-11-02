@@ -6,7 +6,7 @@ stages:
   - test
 
 variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_SHORT_SHA
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.2-rocm5.6.1:$CI_COMMIT_SHORT_SHA
 
 build_job:
   stage: build
@@ -16,11 +16,22 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
+  extends: .container-runner-hohgant-mi200
   image: $PERSIST_IMAGE_NAME
   script:
-    - /opt/helloworld/bin/hello
+    - pwd
+    - ls -l
+    - cd /
+    - ls
+    - rocm-smi
+    - ./stream
+    - cp stream stream-bk
+    - make -B
+    - ./stream
+    - diff stream stream-bk
+    - echo $HIPCC_COMPILE_FLAGS_APPEND
+    - echo done
   variables:
-    SLURM_JOB_NUM_NODES: 2
-    SLURM_PARTITION: debug
-    SLURM_NTASKS: 2
+    SLURM_JOB_NUM_NODES: 1
+      #SLURM_PARTITION: debug
+    SLURM_NTASKS: 1
