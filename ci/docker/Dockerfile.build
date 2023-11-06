@@ -30,7 +30,11 @@ RUN apt-get -yqq update && apt-get -yqq upgrade \
  && rm -rf /var/lib/apt/lists/*
 
 # copy and build the test app
-COPY ./cuda_solutions /
+COPY ./cuda_solutions/api/* /cuda_solutions/api/
+COPY ./cuda_solutions/axpy/* /cuda_solutions/axpy/
+COPY ./cuda_solutions/diffusion/* /cuda_solutions/diffusion/
+COPY ./cuda_solutions/include/* /cuda_solutions/include/
+COPY ./cuda_solutions/shared/* /cuda_solutions/shared/
 WORKDIR /cuda_solutions/axpy/
 RUN make
 
