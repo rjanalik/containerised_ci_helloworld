@@ -38,4 +38,4 @@ COPY ./cuda_solutions/shared/* /cuda_solutions/shared/
 WORKDIR /cuda_solutions/axpy/
 RUN make
 
-CMD ["./axpy 30"]
+#CMD ["./axpy 30"]
