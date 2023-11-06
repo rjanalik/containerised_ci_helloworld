@@ -21,6 +21,8 @@ test_job:
   script:
     - cd /cuda_solutions/axpy/
     - echo asdf
+    - env
+    - echo qwer
     - ./axpy
     - ./axpy 28
     - ./axpy 29
