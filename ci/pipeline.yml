@@ -16,7 +16,7 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
+  extends: .container-runner-hohgant-a100
   image: $PERSIST_IMAGE_NAME
   script:
     - cd /cuda_solutions/axpy/
@@ -26,5 +26,5 @@ test_job:
     - ./axpy 30
   variables:
     SLURM_JOB_NUM_NODES: 1
-    SLURM_PARTITION: debug
+    #SLURM_PARTITION: debug
     SLURM_NTASKS: 1
