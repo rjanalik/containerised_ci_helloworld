@@ -20,6 +20,7 @@ test_job:
   image: $PERSIST_IMAGE_NAME
   script:
     - cd /cuda_solutions/axpy/
+    - echo asdf
     - ./axpy
     - ./axpy 28
     - ./axpy 29
