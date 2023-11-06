@@ -1,4 +1,4 @@
-FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/spack0.20.1-cuda:82e2f44c as builder
+FROM rjanalik/spack:0.20.2-cuda11.7.1-ubuntu22.04 as builder
 
 ARG NUM_PROCS
 
@@ -10,7 +10,7 @@ RUN spack-install-helper daint-gpu \
 # end of builder container, now we are ready to copy necessary files
 
 # copy only relevant parts to the final container
-FROM jfrog.svc.cscs.ch/docker-ci-ext/5104541947502168/rjanalik/base-cpu:1c9d0feb
+FROM rjanalik/spack:base-cuda11.7.1-ubuntu22.04
 
 # it is important to keep the paths, otherwise your installation is broken
 # all these paths are created with the above `spack-install-helper` invocation
@@ -29,3 +29,9 @@ RUN apt-get -yqq update && apt-get -yqq upgrade \
  && apt-get -yqq install build-essential gfortran \
  && rm -rf /var/lib/apt/lists/*
 
+# copy and build the test app
+COPY ./cuda_solutions /
+WORKDIR /cuda_solutions/axpy/
+RUN make
+
+CMD ["./axpy 30"]
