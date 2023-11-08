@@ -27,6 +27,9 @@ test_job:
     - ./axpy 28
     - ./axpy 29
     - ./axpy 30
+    - echo "Let's make it time out"
+    - sleep 1500
+    - echo "The job should be killed before this"
   variables:
     SLURM_JOB_NUM_NODES: 1
     #SLURM_PARTITION: debug
