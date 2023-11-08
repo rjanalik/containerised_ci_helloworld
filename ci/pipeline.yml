@@ -16,20 +16,20 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-clariden-a100
+  extends: .container-runner-hohgant-a100
   image: $PERSIST_IMAGE_NAME
   script:
     - cd /cuda_solutions/axpy/
     - echo asdf
     - env
     - echo qwer
-    - echo "Let's make it time out"
-    - sleep 1500
-    - echo "The job should be killed before this"
     - ./axpy
     - ./axpy 28
     - ./axpy 29
     - ./axpy 30
+    - echo "Let's make it time out"
+    - sleep 1500
+    - echo "The job should be killed before this"
   variables:
     SLURM_JOB_NUM_NODES: 1
     #SLURM_PARTITION: debug
