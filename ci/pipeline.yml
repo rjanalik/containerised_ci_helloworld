@@ -6,7 +6,7 @@ stages:
   - test
 
 variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_SHORT_SHA
+  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/rjanalik/test-spack0.20.1-cuda-ss:$CI_COMMIT_SHORT_SHA
 
 build_job:
   stage: build
@@ -16,11 +16,21 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
+  extends: .container-runner-clariden-a100
   image: $PERSIST_IMAGE_NAME
   script:
-    - /opt/helloworld/bin/hello
+    - cd /cuda_solutions/axpy/
+    - echo asdf
+    - env
+    - echo qwer
+    - ./axpy
+    - ./axpy 28
+    - ./axpy 29
+    - ./axpy 30
+    - echo "Let's make it time out"
+    - sleep 1500
+    - echo "The job should be killed before this"
   variables:
-    SLURM_JOB_NUM_NODES: 2
-    SLURM_PARTITION: debug
-    SLURM_NTASKS: 2
+    SLURM_JOB_NUM_NODES: 1
+    #SLURM_PARTITION: debug
+    SLURM_NTASKS: 1
