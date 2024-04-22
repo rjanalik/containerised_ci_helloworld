@@ -82,32 +82,32 @@ for spackver in $(read_config spackver) ; do
             build_and_push_manifest "$DOCKER_TAG" "$BASE_TAG_NAME"
         fi
 
-        # do the same for cuda base images
-        for cudaver in $(read_config cudaver) ; do
-            cuda_baseimg=docker.io/nvidia/cuda:${cudaver}-devel-${OS_DOCKER_TAG}
-            CUDA_BASE_TAG_NAME=${REMOTE}/spack:base-cuda${cudaver}-${OS_DOCKER_TAG}
-            CUDA_DOCKER_TAG=${REMOTE}/spack:${SPACK_DOCKER_TAG}-cuda${cudaver}-${OS_DOCKER_TAG}
-            if [[ "$COMMAND" == "image" ]] ; then
-                build_and_push_image "docker/Dockerfile_spack_baseimage_${OS_DOCKER_TAG}" "${CUDA_DOCKER_TAG}-$(uname -m)" "--build-arg BASEIMG=$cuda_baseimg" "--build-arg SPACK_VER=$spackver"
-                build_and_push_image "docker/Dockerfile_base_helper" "${CUDA_BASE_TAG_NAME}-$(uname -m)" "--build-arg BASEIMG=$cuda_baseimg"
-            elif [[ "$COMMAND" == "manifest" ]] ; then
-                build_and_push_manifest "$CUDA_DOCKER_TAG" "$CUDA_BASE_TAG_NAME"
-            fi
-        done
+        ## do the same for cuda base images
+        #for cudaver in $(read_config cudaver) ; do
+        #    cuda_baseimg=docker.io/nvidia/cuda:${cudaver}-devel-${OS_DOCKER_TAG}
+        #    CUDA_BASE_TAG_NAME=${REMOTE}/spack:base-cuda${cudaver}-${OS_DOCKER_TAG}
+        #    CUDA_DOCKER_TAG=${REMOTE}/spack:${SPACK_DOCKER_TAG}-cuda${cudaver}-${OS_DOCKER_TAG}
+        #    if [[ "$COMMAND" == "image" ]] ; then
+        #        build_and_push_image "docker/Dockerfile_spack_baseimage_${OS_DOCKER_TAG}" "${CUDA_DOCKER_TAG}-$(uname -m)" "--build-arg BASEIMG=$cuda_baseimg" "--build-arg SPACK_VER=$spackver"
+        #        build_and_push_image "docker/Dockerfile_base_helper" "${CUDA_BASE_TAG_NAME}-$(uname -m)" "--build-arg BASEIMG=$cuda_baseimg"
+        #    elif [[ "$COMMAND" == "manifest" ]] ; then
+        #        build_and_push_manifest "$CUDA_DOCKER_TAG" "$CUDA_BASE_TAG_NAME"
+        #    fi
+        #done
 
-        # and for rocm base images - only x86_64, aarch64 does not exist
-        if [[ $(uname -m) == "x86_64" ]] ; then
-            for rocmver in $(read_config rocmver) ; do
-                #rocm_baseimg=docker.io/rocm/dev-ubuntu-22.04:${rocmver}-devel-${OS_DOCKER_TAG}
-                rocm_baseimg=docker.io/rocm/dev-ubuntu-22.04:${rocmver}-complete
-                ROCM_BASE_TAG_NAME=${REMOTE}/spack:base-rocm${rocmver}-${OS_DOCKER_TAG}
-                ROCM_DOCKER_TAG=${REMOTE}/spack:${SPACK_DOCKER_TAG}-rocm${rocmver}-${OS_DOCKER_TAG}
-                if [[ "$COMMAND" == "image" ]] ; then
-                    build_and_push_image "docker/Dockerfile_spack_baseimage_${OS_DOCKER_TAG}" "${ROCM_DOCKER_TAG}" "--build-arg BASEIMG=$rocm_baseimg" "--build-arg SPACK_VER=$spackver" "--build-arg ROCM_VERSION=$rocmver"
-                    build_and_push_image "docker/Dockerfile_base_helper" "${ROCM_BASE_TAG_NAME}" "--build-arg BASEIMG=$rocm_baseimg"
-                fi
-            done
-        fi
+        ## and for rocm base images - only x86_64, aarch64 does not exist
+        #if [[ $(uname -m) == "x86_64" ]] ; then
+        #    for rocmver in $(read_config rocmver) ; do
+        #        #rocm_baseimg=docker.io/rocm/dev-ubuntu-22.04:${rocmver}-devel-${OS_DOCKER_TAG}
+        #        rocm_baseimg=docker.io/rocm/dev-ubuntu-22.04:${rocmver}-complete
+        #        ROCM_BASE_TAG_NAME=${REMOTE}/spack:base-rocm${rocmver}-${OS_DOCKER_TAG}
+        #        ROCM_DOCKER_TAG=${REMOTE}/spack:${SPACK_DOCKER_TAG}-rocm${rocmver}-${OS_DOCKER_TAG}
+        #        if [[ "$COMMAND" == "image" ]] ; then
+        #            build_and_push_image "docker/Dockerfile_spack_baseimage_${OS_DOCKER_TAG}" "${ROCM_DOCKER_TAG}" "--build-arg BASEIMG=$rocm_baseimg" "--build-arg SPACK_VER=$spackver" "--build-arg ROCM_VERSION=$rocmver"
+        #            build_and_push_image "docker/Dockerfile_base_helper" "${ROCM_BASE_TAG_NAME}" "--build-arg BASEIMG=$rocm_baseimg"
+        #        fi
+        #    done
+        #fi
     done
 done
 
