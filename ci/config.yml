@@ -1,0 +1,85 @@
+include:
+  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
+
+stages:
+  - build_base_image
+  - test_base_image
+  - build_test_images
+  - test_test_images
+    #- deploy_base_image
+
+# Versions to build
+.null: &UBUNTU_VERSIONS ["22.04"]
+.null: &SPACK_VERSIONS ["0.20.3", "0.21.0"]
+.null: &CUDA_VERSIONS ["11.7.1"]
+.null: &ROCM_VERSIONS ["5.6.1", "5.7"]
+
+variables:
+  REGISTRY_PATH: "$CSCS_REGISTRY_PATH/$CI_COMMIT_SHORT_SHA"
+
+.template_arch_str_rules:
+  rules: &arch_str_rules
+    - if: $ARCH == "cpu"
+      variables:
+        ARCH_STR: "cpu"
+    - if: $ARCH == "cuda"
+      variables:
+        ARCH_STR: "cuda${CUDAVER}"
+    - if: $ARCH == "rocm"
+      variables:
+        ARCH_STR: "rocm${ROCMVER}"
+
+.template_arch_baseimg_rules:
+  rules: &arch_baseimg_rules
+    - if: $ARCH == "cpu"
+      variables:
+        BASEIMG: "docker.io/ubuntu:${UBUNTUVER}"
+    - if: $ARCH == "cuda"
+      variables:
+        BASEIMG: "docker.io/nvidia/cuda:${CUDAVER}-devel-ubuntu${UBUNTUVER}"
+    - if: $ARCH == "rocm"
+      variables:
+        BASEIMG: "docker.io/rocm/dev-ubuntu-${UBUNTUVER}:${ROCMVER}-complete"
+
+.template_base_image:
+  parallel:
+    matrix:
+      - ARCH: "cpu"
+        UBUNTUVER: *UBUNTU_VERSIONS
+        SPACKVER: *SPACK_VERSIONS
+      - ARCH: "cuda"
+        UBUNTUVER: *UBUNTU_VERSIONS
+        SPACKVER: *SPACK_VERSIONS
+        CUDAVER: *CUDA_VERSIONS
+      - ARCH: "rocm"
+        UBUNTUVER: *UBUNTU_VERSIONS
+        SPACKVER: *SPACK_VERSIONS
+        ROCMVER: *ROCM_VERSIONS
+  rules:
+    - *arch_str_rules
+    - *arch_baseimg_rules
+  variables:
+    IMAGE_TYPE: "base"
+    SPACKVER_WITH_V: "v${SPACKVER}"
+    SPACK_STR: "spack${SPACKVER}"
+    UBUNTU_STR: "ubuntu${UBUNTUVER}"
+    REGISTRY_IMAGE_NAME_TAG: "${REGISTRY_PATH}/spack-${IMAGE_TYPE}:${SPACK_STR}-${UBUNTU_STR}-${ARCH_STR}"
+
+.template_helper_image:
+  parallel:
+    matrix:
+      - ARCH: "cpu"
+        UBUNTUVER: *UBUNTU_VERSIONS
+      - ARCH: "cuda"
+        UBUNTUVER: *UBUNTU_VERSIONS
+        CUDAVER: *CUDA_VERSIONS
+      - ARCH: "rocm"
+        UBUNTUVER: *UBUNTU_VERSIONS
+        ROCMVER: *ROCM_VERSIONS
+  rules:
+    - *arch_str_rules
+    - *arch_baseimg_rules
+  variables:
+    IMAGE_TYPE: "helper"
+    UBUNTU_STR: "ubuntu${UBUNTUVER}"
+    REGISTRY_IMAGE_NAME_TAG: "${REGISTRY_PATH}/spack-${IMAGE_TYPE}:${UBUNTU_STR}-${ARCH_STR}"

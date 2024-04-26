@@ -1,0 +1,57 @@
+include:
+  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
+  - 'ci/config.yml'
+
+build_test_image_libtree:
+  stage: build_test_images
+  extends:
+    - .container-builder-cscs-zen2
+    - .template_base_image
+  script:
+    #- echo "${DOCKERFILE}"
+    #- echo "${BASEIMG}"
+    #- echo "${SPACKVER}"
+    #- echo "${SPACK_STR}"
+    #- echo "${CPUVER}"
+    #- echo "${CUDAVER}"
+    #- echo "${PERSIST_IMAGE_NAME}"
+    #- echo "${DOCKER_BUILD_ARGS}"
+    #- build_new_container
+    - echo "Build test image libtree"
+
+test_test_image_libtree:
+  stage: test_test_images
+  extends:
+    - .container-builder-cscs-zen2
+    - .template_base_image
+  script:
+    #- echo "${DOCKERFILE}"
+    #- echo "${BASEIMG}"
+    #- echo "${SPACKVER}"
+    #- echo "${SPACK_STR}"
+    #- echo "${CPUVER}"
+    #- echo "${CUDAVER}"
+    #- echo "${PERSIST_IMAGE_NAME}"
+    #- echo "${DOCKER_BUILD_ARGS}"
+    #- build_new_container
+    - echo "Test test image libtree"
+
+      #build_job_image_a:
+      #  stage: build_images
+      #  extends: .container-builder-cscs-zen2
+      #  variables:
+      #    DOCKERFILE: ci/docker/Dockerfile.build
+      #    PERSIST_IMAGE_NAME: $TEST_A_IMAGE_NAME
+      #  script:
+      #    - echo "Build test image a"
+
+      #test_job:
+      #  stage: test
+      #  extends: .container-runner-daint-gpu
+      #  image: $PERSIST_IMAGE_NAME
+      #  script:
+      #    - /opt/helloworld/bin/hello
+      #  variables:
+      #    SLURM_JOB_NUM_NODES: 2
+      #    SLURM_PARTITION: debug
+      #    SLURM_NTASKS: 2
