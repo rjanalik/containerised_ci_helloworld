@@ -1,0 +1,43 @@
+build_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
+  stage: build_base_image
+  extends:
+    - {{container_builder}}
+  variables:
+    DOCKERFILE: "{{basedockerfile}}"
+    PERSIST_IMAGE_NAME: "{{registry_base_image_name_tag}}"
+    DOCKER_BUILD_ARGS: '{{docker_build_args_base}}'
+
+test_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
+  stage: test_base_image
+  extends:
+    - {{container_runner}}
+  image: "{{registry_base_image_name_tag}}"
+  script:
+    - '[[ $(source /etc/os-release && echo $ID) == "{{os}}" ]]'
+    - '[[ $(source /etc/os-release && echo $VERSION_ID) == "{{osver}}" ]]'
+    - '[[ $(spack --version) == "{{spackver}}" ]]'
+    - which spack-install-helper
+    {% if arch == "cuda" -%}
+    - 'apt-cache show cuda-libraries-* | grep "Version: {{cudaver}}"'
+    {%- endif %}
+    {% if arch == "rocm" -%}
+    - 'apt-cache show rocm-core | grep "Version: {{rocmver}}."'
+    {%- endif %}
+
+deploy_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
+  stage: deploy_base_image
+  extends:
+    - {{container_deploy}}
+  image: {{deploy_runner_image}}
+  rules:
+    - if: $CI_COMMIT_REF_NAME != "main"
+      when: manual
+      allow_failure: true
+  variables:
+    SRC: "{{registry_base_image_name_tag}}"
+    DST: "{{deploy_base_image_name_tag}}"
+  script:
+    - DST_REGISTRY=${DST%%/*}
+    - echo ${DST_REGISTRY}
+    - echo ${DEPLOY_REGISTRY_PASSWORD} | skopeo login --username ${DEPLOY_REGISTRY_USERNAME} --password-stdin ${DST_REGISTRY}
+    - skopeo copy "docker://${SRC}" "docker://${DST}"
