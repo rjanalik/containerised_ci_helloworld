@@ -131,5 +131,4 @@ for os in config["os"].keys():
                 targetver = rocmver
                 pipeline.append(generate_job(template, image_type, os, osver, spackver, target, targetver))
 
-#print("\n\n--------------------\n\n".join(pipeline))
 print("\n\n".join(pipeline))
