@@ -42,6 +42,28 @@ def generate_job(template, os, osver, spackver, target, cudaver=None, rocmver=No
 
     return recursive_render(template, data)
 
+def generate_template(template_file, os_dict, spackver_list, cudaver_list, rocmver_list):
+    pipeline = []
+
+    with open(template_file) as f:
+        template = f.read()
+
+    for os in os_dict.keys():
+        for osver in os_dict[os]:
+            for spackver in spackver_list:
+                target = "cpu"
+                pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
+
+                for cudaver in cudaver_list:
+                    target = "cuda"
+                    pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
+
+                for rocmver in rocmver_list:
+                    target = "rocm"
+                    pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
+
+    return pipeline
+
 pipeline = []
 
 # Add header (include)
@@ -57,52 +79,27 @@ stages:
   - deploy_base_image"""
 )
 
-with open('ci/templates/base_image.yml.j2') as f:
-    template = f.read()
-for os in config["os"].keys():
-    for osver in config["os"][os]:
-        for spackver in config["spackver"]:
-            target = "cpu"
-            pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
+templates = [{"template_file": 'ci/templates/base_image.yml.j2',
+              "os_dict": config["os"],
+              "spackver_list": config["spackver"],
+              "cudaver_list": config["cudaver"],
+              "rocmver_list": config["rocmver"],
+             },
+             {"template_file": 'ci/templates/helper_image.yml.j2',
+              "os_dict": config["os"],
+              "spackver_list": [None],
+              "cudaver_list": config["cudaver"],
+              "rocmver_list": config["rocmver"],
+             },
+             {"template_file": 'ci/templates/test_image.yml.j2',
+              "os_dict": config["os"],
+              "spackver_list": config["spackver"],
+              "cudaver_list": config["cudaver"],
+              "rocmver_list": config["rocmver"],
+             },
+            ]
 
-            for cudaver in config["cudaver"]:
-                target = "cuda"
-                pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
-
-            for rocmver in config["rocmver"]:
-                target = "rocm"
-                pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
-
-with open('ci/templates/helper_image.yml.j2') as f:
-    template = f.read()
-spackver = None
-for os in config["os"].keys():
-    for osver in config["os"][os]:
-        target = "cpu"
-        pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
-
-        for cudaver in config["cudaver"]:
-            target = "cuda"
-            pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
-
-        for rocmver in config["rocmver"]:
-            target = "rocm"
-            pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
-
-with open('ci/templates/test_image.yml.j2') as f:
-    template = f.read()
-for os in config["os"].keys():
-    for osver in config["os"][os]:
-        for spackver in config["spackver"]:
-            target = "cpu"
-            pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
-
-            for cudaver in config["cudaver"]:
-                target = "cuda"
-                pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
-
-            for rocmver in config["rocmver"]:
-                target = "rocm"
-                pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
+for t in templates:
+    pipeline += generate_template(t["template_file"], t["os_dict"], t["spackver_list"], t["cudaver_list"], t["rocmver_list"])
 
 print("\n\n".join(pipeline))
