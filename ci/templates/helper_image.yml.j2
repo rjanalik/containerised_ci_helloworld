@@ -1,4 +1,4 @@
-build_job_helper_image-{{os}}{{osver}}-{{archstr}}:
+build_job_helper_image-{{os}}{{osver}}-{{archstr[arch]}}:
   stage: build_base_image
   extends:
     - {{container_builder[arch]}}
@@ -7,7 +7,7 @@ build_job_helper_image-{{os}}{{osver}}-{{archstr}}:
     PERSIST_IMAGE_NAME: "{{registry_helper_image_name_tag}}"
     DOCKER_BUILD_ARGS: '{{docker_build_args_helper}}'
 
-test_job_helper_image-{{os}}{{osver}}-{{archstr}}:
+test_job_helper_image-{{os}}{{osver}}-{{archstr[arch]}}:
   stage: test_base_image
   extends:
     - {{container_runner}}
@@ -22,7 +22,7 @@ test_job_helper_image-{{os}}{{osver}}-{{archstr}}:
     - 'apt-cache show rocm-core | grep "Version: {{rocmver}}."'
     {%- endif %}
 
-deploy_job_helper_image-{{os}}{{osver}}-{{archstr}}:
+deploy_job_helper_image-{{os}}{{osver}}-{{archstr[arch]}}:
   stage: deploy_base_image
   extends:
     - {{container_deploy}}

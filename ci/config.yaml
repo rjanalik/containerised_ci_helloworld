@@ -21,10 +21,10 @@ deploy_path: "$CSCS_REGISTRY_PATH/deploy"
 # Template variables
 basedockerfile: "docker/Dockerfile_spack_baseimage_{{os}}{{osver}}"
 helperdockerfile: "docker/Dockerfile_base_helper"
-registry_base_image_name_tag: "{{registry_path}}/spack-base:spack{{spackver}}-{{os}}{{osver}}-{{archstr}}"
-deploy_base_image_name_tag: "{{deploy_path}}/spack-base:spack{{spackver}}-{{os}}{{osver}}-{{archstr}}"
-registry_helper_image_name_tag: "{{registry_path}}/spack-helper:{{os}}{{osver}}-{{archstr}}"
-deploy_helper_image_name_tag: "{{deploy_path}}/spack-helper:{{os}}{{osver}}-{{archstr}}"
+registry_base_image_name_tag: "{{registry_path}}/spack-base:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
+deploy_base_image_name_tag: "{{deploy_path}}/spack-base:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
+registry_helper_image_name_tag: "{{registry_path}}/spack-helper:{{os}}{{osver}}-{{archstr[arch]}}"
+deploy_helper_image_name_tag: "{{deploy_path}}/spack-helper:{{os}}{{osver}}-{{archstr[arch]}}"
 baseimg:
   cpu: "docker.io/{{os}}:{{osver}}"
   cuda: "docker.io/nvidia/cuda:{{cudaver}}-devel-{{os}}{{osver}}"
@@ -34,13 +34,13 @@ archstr:
   cuda: "cuda{{cudaver}}"
   rocm: "rocm{{rocmver}}"
 docker_build_args_base:
-  cpu:  '["BASEIMG={{baseimg}}", "SPACK_VER=v{{spackver}}"]'
-  cuda: '["BASEIMG={{baseimg}}", "SPACK_VER=v{{spackver}}"]'
-  rocm: '["BASEIMG={{baseimg}}", "SPACK_VER=v{{spackver}}", "ROCM_VERSION={{rocmver}}"]'
+  cpu:  '["BASEIMG={{baseimg[arch]}}", "SPACK_VER=v{{spackver}}"]'
+  cuda: '["BASEIMG={{baseimg[arch]}}", "SPACK_VER=v{{spackver}}"]'
+  rocm: '["BASEIMG={{baseimg[arch]}}", "SPACK_VER=v{{spackver}}", "ROCM_VERSION={{rocmver}}"]'
 docker_build_args_helper:
-  cpu:  '["BASEIMG={{baseimg}}"]'
-  cuda: '["BASEIMG={{baseimg}}"]'
-  rocm: '["BASEIMG={{baseimg}}"]'
+  cpu:  '["BASEIMG={{baseimg[arch]}}"]'
+  cuda: '["BASEIMG={{baseimg[arch]}}"]'
+  rocm: '["BASEIMG={{baseimg[arch]}}"]'
 container_builder:
   cpu:  ".container-builder-cscs-zen2"
   cuda: ".container-builder-cscs-zen2"

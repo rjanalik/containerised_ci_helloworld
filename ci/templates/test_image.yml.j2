@@ -1,16 +1,16 @@
-build_job_test_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
+build_job_test_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
   stage: build_test_image
   extends:
     - {{container_builder[arch]}}
   variables:
     DOCKERFILE: "test/Dockerfile.libtree"
-    PERSIST_IMAGE_NAME: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr}}"
+    PERSIST_IMAGE_NAME: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
     DOCKER_BUILD_ARGS: '["BASEIMG={{registry_base_image_name_tag}}", "HELPERIMG={{registry_helper_image_name_tag}}", "TARGET={{spack_target}}"]'
 
-test_job_base_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
+test_job_base_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
   stage: test_test_image
   extends:
     - {{container_runner}}
-  image: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr}}"
+  image: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
   script:
     - which libtree
