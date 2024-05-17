@@ -51,7 +51,7 @@ def generate_job(template, image_type, os, osver, spackver, target, targetver=No
             "archstr": config["archstr"][target],
             "docker_build_args_base": config["docker_build_args_base"][target],
             "docker_build_args_helper": config["docker_build_args_helper"][target],
-            "container_builder": config["container_builder"][target],
+            "container_builder": config["container_builder"],
             "container_runner": config["container_runner"][target],
             "container_deploy": config["container_deploy"],
             "deploy_runner_image": config["deploy_runner_image"],

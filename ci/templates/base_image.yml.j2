@@ -1,7 +1,7 @@
 build_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
   stage: build_base_image
   extends:
-    - {{container_builder}}
+    - {{container_builder[arch]}}
   variables:
     DOCKERFILE: "{{basedockerfile}}"
     PERSIST_IMAGE_NAME: "{{registry_base_image_name_tag}}"

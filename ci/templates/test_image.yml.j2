@@ -1,7 +1,7 @@
 build_job_test_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr}}:
   stage: build_test_image
   extends:
-    - {{container_builder}}
+    - {{container_builder[arch]}}
   variables:
     DOCKERFILE: "test/Dockerfile.libtree"
     PERSIST_IMAGE_NAME: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr}}"
