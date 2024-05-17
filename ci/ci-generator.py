@@ -19,7 +19,7 @@ def recursive_render(tpl, values):
          else:
              return curr
 
-def generate_job(template, os, osver, spackver, target, targetver=None):
+def generate_job(template, os, osver, spackver, target, cudaver=None, rocmver=None):
     if target == "cpu":
         spack_target = "alps-zen2"
     elif target == "cuda":
@@ -34,8 +34,8 @@ def generate_job(template, os, osver, spackver, target, targetver=None):
             "os": os,
             "osver": osver,
             "spackver": spackver,
-            "cudaver": targetver if target == "cuda" else None,
-            "rocmver": targetver if target == "rocm" else None,
+            "cudaver": cudaver,
+            "rocmver": rocmver,
             "arch": target,
             "spack_target": spack_target,
             }
@@ -63,17 +63,15 @@ for os in config["os"].keys():
     for osver in config["os"][os]:
         for spackver in config["spackver"]:
             target = "cpu"
-            pipeline.append(generate_job(template, os, osver, spackver, target))
+            pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
 
             for cudaver in config["cudaver"]:
                 target = "cuda"
-                targetver = cudaver
-                pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+                pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
 
             for rocmver in config["rocmver"]:
                 target = "rocm"
-                targetver = rocmver
-                pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+                pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
 
 with open('ci/templates/helper_image.yml.j2') as f:
     template = f.read()
@@ -81,17 +79,15 @@ spackver = None
 for os in config["os"].keys():
     for osver in config["os"][os]:
         target = "cpu"
-        pipeline.append(generate_job(template, os, osver, spackver, target))
+        pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
 
         for cudaver in config["cudaver"]:
             target = "cuda"
-            targetver = cudaver
-            pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+            pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
 
         for rocmver in config["rocmver"]:
             target = "rocm"
-            targetver = rocmver
-            pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+            pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
 
 with open('ci/templates/test_image.yml.j2') as f:
     template = f.read()
@@ -99,16 +95,14 @@ for os in config["os"].keys():
     for osver in config["os"][os]:
         for spackver in config["spackver"]:
             target = "cpu"
-            pipeline.append(generate_job(template, os, osver, spackver, target))
+            pipeline.append(generate_job(template, os, osver, spackver, target, None, None))
 
             for cudaver in config["cudaver"]:
                 target = "cuda"
-                targetver = cudaver
-                pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+                pipeline.append(generate_job(template, os, osver, spackver, target, cudaver, None))
 
             for rocmver in config["rocmver"]:
                 target = "rocm"
-                targetver = rocmver
-                pipeline.append(generate_job(template, os, osver, spackver, target, targetver))
+                pipeline.append(generate_job(template, os, osver, spackver, target, None, rocmver))
 
 print("\n\n".join(pipeline))
