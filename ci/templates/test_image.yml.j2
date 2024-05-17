@@ -10,7 +10,7 @@ build_job_test_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}
 test_job_base_image_libtree-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
   stage: test_test_image
   extends:
-    - {{container_runner}}
+    - {{container_runner[arch]}}
   image: "{{registry_path}}/test-libtree:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
   script:
     - which libtree

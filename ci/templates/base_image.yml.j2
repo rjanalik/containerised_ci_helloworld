@@ -5,12 +5,12 @@ build_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
   variables:
     DOCKERFILE: "{{basedockerfile}}"
     PERSIST_IMAGE_NAME: "{{registry_base_image_name_tag}}"
-    DOCKER_BUILD_ARGS: '{{docker_build_args_base}}'
+    DOCKER_BUILD_ARGS: '{{docker_build_args_base[arch]}}'
 
 test_job_base_image-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
   stage: test_base_image
   extends:
-    - {{container_runner}}
+    - {{container_runner[arch]}}
   image: "{{registry_base_image_name_tag}}"
   script:
     - '[[ $(source /etc/os-release && echo $ID) == "{{os}}" ]]'

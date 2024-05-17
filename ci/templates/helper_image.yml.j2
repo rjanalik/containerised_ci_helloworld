@@ -5,12 +5,12 @@ build_job_helper_image-{{os}}{{osver}}-{{archstr[arch]}}:
   variables:
     DOCKERFILE: "{{helperdockerfile}}"
     PERSIST_IMAGE_NAME: "{{registry_helper_image_name_tag}}"
-    DOCKER_BUILD_ARGS: '{{docker_build_args_helper}}'
+    DOCKER_BUILD_ARGS: '{{docker_build_args_helper[arch]}}'
 
 test_job_helper_image-{{os}}{{osver}}-{{archstr[arch]}}:
   stage: test_base_image
   extends:
-    - {{container_runner}}
+    - {{container_runner[arch]}}
   image: "{{registry_helper_image_name_tag}}"
   script:
     - '[[ $(source /etc/os-release && echo $ID) == "{{os}}" ]]'

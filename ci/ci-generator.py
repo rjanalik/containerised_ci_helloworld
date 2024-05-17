@@ -49,10 +49,10 @@ def generate_job(template, image_type, os, osver, spackver, target, targetver=No
             "baseimg": config["baseimg"],
             "arch": target,
             "archstr": config["archstr"],
-            "docker_build_args_base": config["docker_build_args_base"][target],
-            "docker_build_args_helper": config["docker_build_args_helper"][target],
+            "docker_build_args_base": config["docker_build_args_base"],
+            "docker_build_args_helper": config["docker_build_args_helper"],
             "container_builder": config["container_builder"],
-            "container_runner": config["container_runner"][target],
+            "container_runner": config["container_runner"],
             "container_deploy": config["container_deploy"],
             "deploy_runner_image": config["deploy_runner_image"],
             }
