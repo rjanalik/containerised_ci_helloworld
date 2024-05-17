@@ -15,7 +15,7 @@ rocmver:
     #- "5.7"
 
 # Global variables
-registry_path: "$CSCS_REGISTRY_PATH/$CI_COMMIT_SHORT_SHA"
+registry_path: "$CSCS_REGISTRY_PATH/test/$CI_COMMIT_SHORT_SHA"
 deploy_path: "$CSCS_REGISTRY_PATH/deploy"
 
 # Template variables
