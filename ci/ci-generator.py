@@ -30,31 +30,15 @@ def generate_job(template, image_type, os, osver, spackver, target, targetver=No
         print(f"Error: undnouwn target {target}")
         exit(1)
 
-    data = {
+    data = config | {
             "image_type": image_type,
             "os": os,
             "osver": osver,
             "spackver": spackver,
             "cudaver": targetver if target == "cuda" else None,
             "rocmver": targetver if target == "rocm" else None,
-            "spack_target": spack_target,
-            "registry_path": config["registry_path"],
-            "deploy_path": config["deploy_path"],
-            "basedockerfile": config["basedockerfile"],
-            "helperdockerfile": config["helperdockerfile"],
-            "registry_base_image_name_tag": config["registry_base_image_name_tag"],
-            "deploy_base_image_name_tag": config["deploy_base_image_name_tag"],
-            "registry_helper_image_name_tag": config["registry_helper_image_name_tag"],
-            "deploy_helper_image_name_tag": config["deploy_helper_image_name_tag"],
-            "baseimg": config["baseimg"],
             "arch": target,
-            "archstr": config["archstr"],
-            "docker_build_args_base": config["docker_build_args_base"],
-            "docker_build_args_helper": config["docker_build_args_helper"],
-            "container_builder": config["container_builder"],
-            "container_runner": config["container_runner"],
-            "container_deploy": config["container_deploy"],
-            "deploy_runner_image": config["deploy_runner_image"],
+            "spack_target": spack_target,
             }
 
     return recursive_render(template, data)
