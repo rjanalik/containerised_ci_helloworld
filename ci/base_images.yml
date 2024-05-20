@@ -1,0 +1,65 @@
+include:
+  - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
+  - 'ci/config.yml'
+
+build_job_base_image:
+  stage: build_base_image
+  extends:
+    - .container-builder-cscs-zen2
+    - .template_base_image
+  rules:
+  - !reference [.template_arch_str_rules, rules]
+  - !reference [.template_arch_baseimg_rules, rules]
+  - if: $ARCH == "rocm"
+    variables:
+      DOCKER_BUILD_ARGS: '["BASEIMG=${BASEIMG}", "SPACK_VER=${SPACKVER_WITH_V}", "ROCM_VERSION=${ROCMVER}"]'
+  variables:
+    DOCKERFILE: "docker/Dockerfile_spack_baseimage_ubuntu${UBUNTUVER}"
+    PERSIST_IMAGE_NAME: "$REGISTRY_IMAGE_NAME_TAG"
+    DOCKER_BUILD_ARGS: '["BASEIMG=${BASEIMG}", "SPACK_VER=${SPACKVER_WITH_V}"]'
+  script:
+    - echo "${DOCKERFILE}"
+    - echo "${BASEIMG}"
+    - echo "${SPACKVER}"
+    - echo "${SPACK_STR}"
+    - echo "${CPUVER}"
+    - echo "${CUDAVER}"
+    - echo "${PERSIST_IMAGE_NAME}"
+    - echo "${DOCKER_BUILD_ARGS}"
+    - build_new_container
+
+      #test_job_base_image:
+      #  stage: test_base_image
+      #  extends:
+      #    - .container-builder-cscs-zen2
+      #    - .template_base_image
+      #  script:
+      #    - echo "Test base image"
+      #
+      #build_job_helper_image:
+      #  stage: build_base_image
+      #  extends:
+      #    - .container-builder-cscs-zen2
+      #    - .template_helper_image
+      #  variables:
+      #    DOCKERFILE: "docker/Dockerfile_base_helper"
+      #    PERSIST_IMAGE_NAME: "$REGISTRY_IMAGE_NAME_TAG"
+      #    DOCKER_BUILD_ARGS: '["BASEIMG=${BASEIMG}"]'
+      #  script:
+      #    - echo "${DOCKERFILE}"
+      #    - echo "${BASEIMG}"
+      #    - echo "${SPACKVER}"
+      #    - echo "${SPACK_STR}"
+      #    - echo "${CPUVER}"
+      #    - echo "${CUDAVER}"
+      #    - echo "${PERSIST_IMAGE_NAME}"
+      #    - echo "${DOCKER_BUILD_ARGS}"
+      #    - build_new_container
+      #
+      #test_job_helper_image:
+      #  stage: test_base_image
+      #  extends:
+      #    - .container-builder-cscs-zen2
+      #    - .template_helper_image
+      #  script:
+      #    - echo "Test helper image"

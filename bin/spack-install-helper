@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+source spack-install-helper-10-preprocessing
+source spack-install-helper-20-configure-environment
+source spack-install-helper-30-add-specs
+source spack-install-helper-40-concretize-install
+source spack-install-helper-50-postprocessing
