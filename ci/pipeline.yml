@@ -69,7 +69,7 @@ build multiarch image:
 test_x86_64:
   stage: test
   extends: .container-runner-eiger-mc
-image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
+  image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
   script:
     - /helloworld/build/hello
   variables:
@@ -79,11 +79,9 @@ image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
 test_aarch64:
   stage: test
   extends: .container-runner-todi-gh200
-image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
+  image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
   script:
     - /helloworld/build/hello
   variables:
     SLURM_JOB_NUM_NODES: 2
     USE_MPI: ‘YES’
-
-
