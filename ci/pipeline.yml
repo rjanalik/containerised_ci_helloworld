@@ -85,3 +85,5 @@ image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
   variables:
     SLURM_JOB_NUM_NODES: 2
     USE_MPI: ‘YES’
+
+
