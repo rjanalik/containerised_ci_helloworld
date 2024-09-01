@@ -3,7 +3,8 @@ FROM $IMG_BASE as builder
 
 ENV NUM_PROCS=4
 
-RUN spack-install-helper --target alps-gh200 \
+ARG TARGET
+RUN spack-install-helper --target $TARGET \
     "git" "cmake" "gmake" "valgrind" "python"
 
 # end of builder container, now we are ready to copy necessary files
