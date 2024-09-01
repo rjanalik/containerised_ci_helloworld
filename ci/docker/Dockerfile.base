@@ -1,5 +1,5 @@
 ARG IMG_BASE
-FROM $IMG as builder
+FROM $IMG_BASE as builder
 
 RUN spack-install-helper --target alps-gh200 \
     "git" "cmake" "gmake" "valgrind" "python"
