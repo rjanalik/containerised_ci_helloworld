@@ -1,4 +1,5 @@
-FROM ubuntu:22.04 as builder
+ARG IMG
+FROM $IMG as builder
 
 COPY . /helloworld/src
 
@@ -9,7 +10,3 @@ RUN apt-get update \
   && cmake -DCMAKE_INSTALL_PREFIX=/opt/hello ../src \
   && make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l) install \
   && make install
-
-FROM ubuntu:22.04
-COPY --from=builder /opt/hello /opt/helloworld
-

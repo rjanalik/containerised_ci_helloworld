@@ -2,25 +2,86 @@ include:
   - remote: 'https://gitlab.com/cscs-ci/recipes/-/raw/master/templates/v2/.ci-ext.yml'
 
 stages:
-  - build
+  - build_base
+  - build_app
+  - build_multiarch
   - test
 
-variables:
-  PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/helloworld:$CI_COMMIT_SHORT_SHA
 
-build_job:
-  stage: build
-  extends: .container-builder
+build_base_image_x86_64:
+  extends: .container-builder-cscs-zen2
+  stage: build_base
+  before_script:
+    - export BASE_IMG_TAG_X86_64=x86_64-`cat ci/docker/Dockerfile.base | sha256sum - | head -c 16`
+    - export PERSIST_IMAGE_NAME=$CSCS_REGISTRY_PATH/baseimg:$BASE_IMG_TAG_X86_64
+    - echo "BASE_IMG_TAG_X86_64=$BASE_IMG_TAG_X86_64" > build.env
+  artifacts:
+    reports:
+      dotenv: build.env
   variables:
-    DOCKERFILE: ci/docker/Dockerfile.build
+    DOCKERFILE: ci/docker/Dockerfile.base
+    CSCS_REBUILD_POLICY: "if-not-exists"
+    DOCKER_BUILD_ARGS: '["IMG_BASE=ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-base:spack0.21.0-ubuntu22.04-cpu", "IMG_HELPER=ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-helper:ubuntu22.04-cpu", "TARGET=alps-zen2"]'
 
-test_job:
+build_base_image_aarch64:
+  extends: .container-builder-cscs-gh200
+  stage: build_base
+  before_script:
+    - export BASE_IMG_TAG_AARCH64=aarch64-`cat ci/docker/Dockerfile.base | sha256sum - | head -c 16`
+    - export PERSIST_IMAGE_NAME=$CSCS_REGISTRY_PATH/baseimg:$BASE_IMG_TAG_AARCH64
+    - echo "BASE_IMG_TAG_AARCH64=$BASE_IMG_TAG_AARCH64" > build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+  variables:
+    DOCKERFILE: ci/docker/Dockerfile.base.aarch64
+    CSCS_REBUILD_POLICY: "if-not-exists"
+    DOCKER_BUILD_ARGS: '["IMG_BASE=ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-base:spack0.21.0-ubuntu22.04-cuda12.4.1", "IMG_HELPER=ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-helper:ubuntu22.04-cuda12.4.1", "TARGET=alps-gh200"]'
+
+
+build_app_image_x86_64:
+  extends: .container-builder-cscs-zen2
+  stage: build_app
+  variables:
+    DOCKERFILE: ci/docker/Dockerfile.app
+    PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/appimg:x86_64-$CI_COMMIT_SHORT_SHA
+    DOCKER_BUILD_ARGS: '["IMG=$CSCS_REGISTRY_PATH/baseimg:$BASE_IMG_TAG_X86_64]'
+
+
+build_app_image_aarch64:
+  extends: .container-builder-cscs-zen2
+  stage: build_app
+  variables:
+    DOCKERFILE: ci/docker/Dockerfile.app
+    PERSIST_IMAGE_NAME: $CSCS_REGISTRY_PATH/appimg:aarch64-$CI_COMMIT_SHORT_SHA
+    DOCKER_BUILD_ARGS: '["IMG=$CSCS_REGISTRY_PATH/baseimg:$BASE_IMG_TAG_AARCH64]'
+
+
+build multiarch image:
+  stage: build_multiarch
+  extends: .make-multiarch-image
+  variables:
+    PERSIST_IMAGE_NAME_X86_64: "$CSCS_REGISTRY_PATH/appimg:x86_64-$CI_COMMIT_SHORT_SHA"
+    PERSIST_IMAGE_NAME_AARCH64: "$CSCS_REGISTRY_PATH/appimg:aarch64-$CI_COMMIT_SHORT_SHA"
+    PERSIST_IMAGE_NAME: "$CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA"
+
+
+test_x86_64:
   stage: test
-  extends: .container-runner-daint-gpu
-  image: $PERSIST_IMAGE_NAME
+  extends: .container-runner-eiger-mc
+  image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
   script:
-    - /opt/helloworld/bin/hello
+    - /helloworld/build/hello
   variables:
     SLURM_JOB_NUM_NODES: 2
-    SLURM_PARTITION: debug
-    SLURM_NTASKS: 2
+    USE_MPI: ‘YES’
+
+test_aarch64:
+  stage: test
+  extends: .container-runner-todi-gh200
+  image: $CSCS_REGISTRY_PATH/appimg:$CI_COMMIT_SHORT_SHA
+  script:
+    - /helloworld/build/hello
+  variables:
+    SLURM_JOB_NUM_NODES: 2
+    USE_MPI: ‘YES’
