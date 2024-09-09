@@ -13,6 +13,8 @@ build_job:
   extends: .container-builder
   variables:
     DOCKERFILE: ci/docker/Dockerfile.build
+  before_script:
+    - echo $DOCKERHUB_TOKEN | podman login docker.io -u $DOCKERHUB_USERNAME --password-stdin
 
 test_job:
   stage: test
