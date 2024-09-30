@@ -10,6 +10,9 @@ COPY . /src
 #  && make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l) install \
 #  && make install
 
+RUN spack-install-helper \
+    daint-mc
+
 RUN cd /src \
  && cc hello.c -o hello
 
