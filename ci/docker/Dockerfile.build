@@ -11,6 +11,8 @@ FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-base:spack0.21.0-ubunt
 RUN apt-get update \
   && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential
 
+RUN sed -i 's/3.1.4/4.2.2/' /usr/local/bin/spack-install-helper-10-preprocessing
+RUN sed -i 's/3.1.4/4.2.2/' /usr/local/bin/spack-install-helper-20-configure-environment
 RUN spack-install-helper \
     alps-zen2
 
