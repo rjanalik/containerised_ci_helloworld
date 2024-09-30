@@ -1,7 +1,5 @@
 FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-base:spack0.21.0-ubuntu22.04-cpu as builder
 
-COPY . /src
-
 #RUN apt-get update \
 #  && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential cmake \
 #  && mkdir /helloworld/build \
@@ -11,15 +9,24 @@ COPY . /src
 #  && make install
 
 RUN spack-install-helper \
-    daint-mc
-
-RUN cd /src \
- && cc hello.c -o hello
+    daint-zen2
 
 
 FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-helper:ubuntu22.04-cpu
-COPY --from=builder /src/hello /opt/hello
+
+# it is important to keep the paths, otherwise your installation is broken
+# all these paths are created with the above `spack-install-helper` invocation
+COPY --from=builder /opt/spack-environment /opt/spack-environment
+COPY --from=builder /opt/software /opt/software
+COPY --from=builder /opt/._view /opt/._view
+COPY --from=builder /etc/profile.d/z10_spack_environment.sh /etc/profile.d/z10_spack_environment.sh
 
 # Some boilerplate to get all paths correctly - fix_spack_install is part of the base image
 # and makes sure that all important things are being correctly setup
 RUN fix_spack_install
+
+# Finally do what we need
+COPY . /src
+
+RUN cd /src \
+ && mpicc hello.c -o hello
