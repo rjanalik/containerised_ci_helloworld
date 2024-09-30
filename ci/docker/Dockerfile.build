@@ -10,7 +10,7 @@ COPY . /src
 #  && make -j$(cat /proc/cpuinfo | grep '^processor' | wc -l) install \
 #  && make install
 
-RUN mpicc hello.c -o hello
+RUN cc hello.c -o hello
 
 
 FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-helper:ubuntu22.04-cpu
