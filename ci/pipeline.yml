@@ -24,4 +24,4 @@ test_job:
     SLURM_JOB_NUM_NODES: 2
     SLURM_PARTITION: debug
     SLURM_NTASKS: 2
-    USE_MPI: 1
+    USE_MPI: pmi2
