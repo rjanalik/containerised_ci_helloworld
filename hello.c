@@ -13,30 +13,53 @@
  ****************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <mpi.h>
 
 
 int main(int argc, char *argv[])
 {
     /* declare any variables you need */
-    int my_rank;
+    int rank;
     int size;
+    int number;
+    MPI_Status status;
 
     MPI_Init(&argc, &argv);
 
     /* Get the rank of each process */
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     /* Get the size of the communicator */
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
     /* Write code such that every process writes its rank and the size of the communicator,
      * but only process 0 prints "hello world*/
-    if (my_rank == 0) {
-        printf ("Hello world!\n");
+    printf("Process %d out of %d.\n", rank, size);
+
+    /* Check communicator size */
+    if (size != 2) {
+        printf("Error: Proces %d: communicator size %d, expected 2.\n", rank, size);
+        MPI_Finalize();
+        exit(1);
     }
 
-    printf("I am process %i out of %i.\n", my_rank, size);
+    /* Check send, receive */
+    if (rank == 0) {
+        number = 42;
+        printf("Process %d: sending number %d\n", rank, number);
+        MPI_Send(&number, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+    }
+
+    if (rank == 1) {
+        MPI_Recv(&number, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+        printf("Process %d: received number %d\n", rank, number);
+        if (number != 42) {
+            printf("Error: Process %d: received %d, expected 42.\n", rank, number);
+            MPI_Finalize();
+            exit(1);
+        }
+    }
 
     MPI_Finalize();
     return 0;
