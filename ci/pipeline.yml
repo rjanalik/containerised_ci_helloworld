@@ -19,6 +19,7 @@ test_job:
   extends: .container-runner-eiger-mc
   image: $PERSIST_IMAGE_NAME
   script:
+    - hostname
     - /src/hello
   variables:
     SLURM_JOB_NUM_NODES: 2
