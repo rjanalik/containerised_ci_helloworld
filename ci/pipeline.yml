@@ -16,7 +16,7 @@ build_job:
 
 test_job:
   stage: test
-  extends: .container-runner-eiger-mc
+  extends: .container-runner-todi-gh200
   image: $PERSIST_IMAGE_NAME
   script:
     - hostname
