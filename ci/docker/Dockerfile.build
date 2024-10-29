@@ -1,4 +1,4 @@
-FROM jfrog.svc.cscs.ch/docker-ci-ext/4299042326928875/test/1f81d1fc/spack-build:spack0.21.0-ubuntu22.04-cuda12.4.1-aarch64 as builder
+FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-base:spack0.21.0-ubuntu22.04-cuda12.4.1 as builder
 
 #RUN apt-get update \
 #  && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential cmake \
@@ -17,7 +17,7 @@ RUN spack-install-helper \
     alps-gh200
 
 
-FROM jfrog.svc.cscs.ch/docker-ci-ext/4299042326928875/test/1f81d1fc/spack-runtime:ubuntu22.04-cuda12.4.1-aarch64
+FROM ghcr.io/eth-cscs/docker-ci-ext/base-containers/spack-helper:ubuntu22.04-cuda12.4.1
 
 # it is important to keep the paths, otherwise your installation is broken
 # all these paths are created with the above `spack-install-helper` invocation
