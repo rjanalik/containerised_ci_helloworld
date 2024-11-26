@@ -1,4 +1,4 @@
-FROM ghcr.io/eth-cscs/docker-ci-ext/spack-base-containers/spack-build:spack0.23.0-ubuntu22.04-cuda12.4.1 as builder
+FROM ghcr.io/eth-cscs/docker-ci-ext/spack-base-containers/spack-build:spack0.21.0-ubuntu22.04-cuda12.4.1 as builder
 
 #RUN apt-get update \
 #  && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential cmake \
