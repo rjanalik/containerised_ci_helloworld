@@ -10,17 +10,18 @@ variables:
 
 build_job:
   stage: build
-  extends: .container-builder-cscs-zen2
+  extends: .container-builder-cscs-gh200
   variables:
     DOCKERFILE: ci/docker/Dockerfile.build
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
+  extends: .container-runner-todi-gh200
   image: $PERSIST_IMAGE_NAME
   script:
     - hostname
     - osu_bw
+    - ./hello
   variables:
     SLURM_JOB_NUM_NODES: 2
     SLURM_PARTITION: debug

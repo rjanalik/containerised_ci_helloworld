@@ -22,7 +22,7 @@ RUN apt-get update \
 RUN sed -i 's/mpich@3.1.4 netmod=tcp device=ch3/mpich@4.2.3 netmod=ofi device=ch4 pmi=default/' /usr/local/bin/spack-install-helper-10-preprocessing
 RUN sed -i 's/mpich@3.1.4 netmod=tcp device=ch3/mpich@4.2.3 netmod=ofi device=ch4 pmi=default/' /usr/local/bin/spack-install-helper-20-configure-environment
 RUN spack-install-helper \
-    alps-mi200 \
+    alps-gh200 \
     osu-micro-benchmarks \
     bc
 
