@@ -15,14 +15,27 @@ RUN TARGET=/usr/local/cuda/lib64/stubs/libcuda.so; \
     then \
       ln -s $TARGET $LINK_NAME; \
     fi
+RUN TARGET=/usr/local/cuda/lib64/stubs/libcuda.so; \
+    LINK_NAME=/usr/local/cuda/lib64/libcuda.so.1; \
+    if test -f $TARGET && test ! -f $LINK_NAME; \
+    then \
+      ln -s $TARGET $LINK_NAME; \
+    fi
 
 RUN apt-get update \
   && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential
 
 RUN sed -i 's/mpich@3.1.4 netmod=tcp device=ch3/mpich@4.2.1 netmod=ofi device=ch4 pmi=default/' /usr/local/bin/spack-install-helper-10-preprocessing
 RUN sed -i 's/mpich@3.1.4 netmod=tcp device=ch3/mpich@4.2.1 netmod=ofi device=ch4 pmi=default/' /usr/local/bin/spack-install-helper-20-configure-environment
+
 RUN spack-install-helper \
     alps-gh200
+
+# Finally do what we need
+COPY ./hello.c /src/hello.c
+
+RUN cd /src \
+ && mpicc hello.c -o hello
 
 
 FROM jfrog.svc.cscs.ch/docker-ci-ext/base-containers/public/spack-runtime:ubuntu22.04-cuda12.4.1
@@ -34,15 +47,9 @@ COPY --from=builder /opt/software /opt/software
 COPY --from=builder /opt/._view /opt/._view
 COPY --from=builder /etc/profile.d/z10_spack_environment.sh /etc/profile.d/z10_spack_environment.sh
 
+# copy hello
+COPY --from=builder /src /src
+
 # Some boilerplate to get all paths correctly - fix_spack_install is part of the base image
 # and makes sure that all important things are being correctly setup
 RUN fix_spack_install
-
-RUN apt-get update \
-  && env DEBIAN_FRONTEND=noninteractive TZ=Europe/Zurich apt-get -yqq install --no-install-recommends build-essential
-
-# Finally do what we need
-COPY ./hello.c /src/hello.c
-
-RUN cd /src \
- && mpicc hello.c -o hello
