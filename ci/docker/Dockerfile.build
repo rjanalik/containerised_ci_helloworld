@@ -28,6 +28,7 @@ RUN spack-install-helper \
 COPY ./hello.c /src/hello.c
 
 RUN cd /src \
+ && ldconfig \
  && /opt/view/bin/mpicc hello.c -o hello
 
 
