@@ -36,6 +36,14 @@ COPY --from=builder /opt/software /opt/software
 COPY --from=builder /opt/._view /opt/._view
 COPY --from=builder /etc/profile.d/z10_spack_environment.sh /etc/profile.d/z10_spack_environment.sh
 
+# Fix error in ./configure: cannot link with -lcuda
+RUN TARGET=/usr/local/cuda/lib64/stubs/libcuda.so; \
+    LINK_NAME=/usr/local/cuda/lib64/libcuda.so; \
+    if test -f $TARGET && test ! -f $LINK_NAME; \
+    then \
+      ln -s $TARGET $LINK_NAME; \
+    fi
+
 # Some boilerplate to get all paths correctly - fix_spack_install is part of the base image
 # and makes sure that all important things are being correctly setup
 RUN fix_spack_install
