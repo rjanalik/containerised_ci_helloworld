@@ -21,7 +21,6 @@ test_job:
   image: $PERSIST_IMAGE_NAME
   script:
     - hostname
-    - osu_bw
     - ./hello
   variables:
     SLURM_JOB_NUM_NODES: 2
