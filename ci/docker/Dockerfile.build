@@ -24,13 +24,6 @@ RUN sed -i 's/mpich@3.1.4 netmod=tcp device=ch3/mpich@4.2.1 netmod=ofi device=ch
 RUN spack-install-helper \
     alps-gh200
 
-# Finally do what we need
-COPY ./hello.c /src/hello.c
-
-RUN cd /src \
- && ldconfig \
- && /opt/view/bin/mpicc hello.c -o hello
-
 
 FROM ghcr.io/eth-cscs/docker-ci-ext/spack-base-containers/spack-runtime:ubuntu22.04-cuda12.4.1
 
@@ -41,8 +34,11 @@ COPY --from=builder /opt/software /opt/software
 COPY --from=builder /opt/._view /opt/._view
 COPY --from=builder /etc/profile.d/z10_spack_environment.sh /etc/profile.d/z10_spack_environment.sh
 
-# Copy also hello
-COPY --from=builder /src /src
+# Finally do what we need
+COPY ./hello.c /src/hello.c
+
+RUN cd /src \
+ && mpicc hello.c -o hello
 
 # Some boilerplate to get all paths correctly - fix_spack_install is part of the base image
 # and makes sure that all important things are being correctly setup
