@@ -13,6 +13,7 @@ build_job:
   extends: .container-builder-cscs-gh200
   variables:
     DOCKERFILE: ci/docker/Dockerfile.build
+    SLURM_PARTITION: debug
 
 test_job:
   stage: test
