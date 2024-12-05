@@ -28,7 +28,7 @@ RUN spack-install-helper \
 COPY ./hello.c /src/hello.c
 
 RUN cd /src \
- && mpicc hello.c -o hello
+ && /opt/view/bin/mpicc hello.c -o hello
 
 
 FROM ghcr.io/eth-cscs/docker-ci-ext/spack-base-containers/spack-runtime:ubuntu22.04-cuda12.4.1
