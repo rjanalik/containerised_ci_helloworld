@@ -25,7 +25,7 @@ RUN spack-install-helper \
     alps-gh200
 
 # Finally do what we need
-COPY . /src
+COPY ./hello.c /src/hello.c
 
 RUN cd /src \
  && mpicc hello.c -o hello
