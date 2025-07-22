@@ -116,3 +116,28 @@ test_job_test_image_mpi_simple-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]
     SLURM_NTASKS: 2
     SLURM_MPI_TYPE: pmix
 {% endif %}
+
+##### diffusion
+
+build_job_test_image_diffusion-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
+  stage: build_test_image
+  extends:
+    - {{container_builder[arch]}}
+  variables:
+    DOCKERFILE: "test/diffusion/Dockerfile.diffusion"
+    PERSIST_IMAGE_NAME: "{{registry_path}}/test-diffusion:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
+    DOCKER_BUILD_ARGS: '["BUILDIMG={{registry_build_image_name_tag}}", "RUNTIMEIMG={{registry_runtime_image_name_tag}}", "TARGET={{spack_target}}"]'
+
+test_job_test_image_diffusion-{{os}}{{osver}}-spack{{spackver}}-{{archstr[arch]}}:
+  stage: test_test_image
+  extends:
+    - {{container_runner[arch]}}
+  image: "{{registry_path}}/test-diffusion:spack{{spackver}}-{{os}}{{osver}}-{{archstr[arch]}}"
+  script:
+    - hostname
+    - /src//diffusion2d_mpi 25 10000
+  variables:
+    SLURM_JOB_NUM_NODES: 2
+    SLURM_NTASKS: 2
+    SLURM_MPI_TYPE: pmix
+{% endif %}
