@@ -8,7 +8,8 @@ RUN apt-get update \
 
 ARG TARGET
 RUN spack-install-helper \
-    "$TARGET"
+    "$TARGET" \
+    openmpi
 
 
 # copy only relevant parts to the final container
