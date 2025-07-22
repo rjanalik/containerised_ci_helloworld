@@ -32,4 +32,4 @@ RUN apt-get update \
 COPY ./test/diffusion /src
 
 RUN cd /src \
- && make
+ && make diffusion2d_mpi
