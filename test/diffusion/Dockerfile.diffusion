@@ -10,6 +10,7 @@ ARG TARGET
 RUN spack-install-helper \
     "$TARGET" \
     openmpi
+    #dummy change to restart the pipeline
 
 
 # copy only relevant parts to the final container
