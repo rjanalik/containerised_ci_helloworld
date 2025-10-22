@@ -10,17 +10,36 @@ variables:
 
 build_job:
   stage: build
-  extends: .container-builder
+  extends: .uenv-runner-daint-gh200
+  image: prgenv-gnu/25.6:v2
+  script:
+    - pwd
+    - which g++
+    - g++ --version
+    - which cmake
+    - cmake --version
+    - uenv status
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
   variables:
-    DOCKERFILE: ci/docker/Dockerfile.build
+    WITH_UENV_VIEW: 'default'
+  artifacts:
+    paths:
+      - build/
 
 test_job:
   stage: test
-  extends: .container-runner-daint-gpu
-  image: $PERSIST_IMAGE_NAME
+  extends: .uenv-runner-daint-gh200
+  image: prgenv-gnu/25.6:v2
   script:
-    - /opt/helloworld/bin/hello
+    - pwd
+    - which g++
+    - uenv status
+    - ./build/hello
   variables:
+    WITH_UENV_VIEW: 'default'
     SLURM_JOB_NUM_NODES: 2
     SLURM_PARTITION: debug
     SLURM_NTASKS: 2
